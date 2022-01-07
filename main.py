@@ -192,10 +192,6 @@ def itinerary(chat_id,chat_user,city,curr_card,caller):
     placename = ['dining','visiting']
 
     intro_msg = f'Hello {chat_user}, here\'s your itinerary for a day in {city}.\nCurrently, the weather is:\n{weather}'
-    if caller == 'wander':
-        address = 'vicinity'
-    if caller == 'search':
-        address = 'formatted_address'  
 
     bot.send_message(chat_id=chat_id,text=intro_msg)
     for idx, place in enumerate(placelist):
@@ -205,7 +201,7 @@ def itinerary(chat_id,chat_user,city,curr_card,caller):
             latitude=place['geometry']['location']['lat'],
             longitude=place['geometry']['location']['lng'],
             title=place['name'],
-            address=place[address],
+            address=place['vicinity'],
             google_place_id=place['place_id'])
         else:
             notfound_msg = f'It seems like we couldn\'t find any spots for {placename[idx]}. You can reroll to try again.'
