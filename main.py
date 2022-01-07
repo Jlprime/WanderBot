@@ -177,13 +177,17 @@ def wander(message):
     if not user_location:
         set_user_location(message)
         return
-    
+
     chat_id = message.chat.id
+
+    if not user_info['chat_name']:
+        bot.send_message(chat_id=chat_id,text='Please run /start first!')
+
     lat = user_location['latitude']
     long = user_location['longitude']
     rad = user_location['radius']
-
     chat_user = user_info['chat_name']
+
     city = reverse_geocoder(str(lat),str(long))
     curr_card = cardClass(lat,long,rad)
     
@@ -202,10 +206,10 @@ def itinerary(chat_id,chat_user,city,curr_card):
     placename = ['dining','visiting']
 
     caption_msg = (
-        f'Hello {chat_user},\nHere\'s your itinerary for a day in <b>{city}</b>.\n\n'
-        f'<b>{city}</b> is currently experiencing <b>{weather}</b> with a temperature of <b>{temp:.1f} deg C</b>.\n\n'
-        f"First, you may grab some delicacies at {eat_place['name']} ({eat_place['rating']}\xE2\xAD\x90 / 5\xE2\xAD\x90)\n\n"
-        f"After which, you can visit {visit_place['name']} (Rating {visit_place['rating']}\xE2\xAD\x90 / 5\xE2\xAD\x90)"
+        f"Hello {chat_user},\nHere\'s your itinerary for a day in <b>{city}</b>.\n\n"
+        f"<b>{city}</b> is currently experiencing <b>{weather}</b> with a temperature of <b>{temp:.1f} deg C</b>.\n\n"
+        f"First, you may grab some delicacies at {eat_place['name']} ({eat_place['rating']}☆ / 5☆)\n\n"
+        f"After which, you can visit {visit_place['name']} (Rating {visit_place['rating']}☆ / 5☆)"
     )
 
     eat_img = InputMediaPhoto(retrievePics(eat_place['photos'][0]['photo_reference']),caption=caption_msg,parse_mode='HTML')
