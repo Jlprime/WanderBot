@@ -13,11 +13,14 @@ class cardClassSearch:
 
 def weather(city):
     # Using OpenWeather API, we can derive the current weather conditions of the current place of the user
-    url = "http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s" % (city, config.WEATHER_API_KEY)
+    url = "http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric" % (city, config.WEATHER_API_KEY)
     response = requests.get(url)
     data = json.loads(response.text)
-    current = data['weather'][0]['description']
-    return current.title()
+    # print (data)
+    if data:
+        return [data['weather'][0]['description'].title(),data['main']['temp']]
+    else:
+        return []
 
 def place(city, which):
 
