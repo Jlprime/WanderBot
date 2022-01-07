@@ -1,7 +1,7 @@
 import requests
 import json
 import config
-from random import randint
+from random import randint, choice
 
 class cardClass:
     def __init__(self, lat, long, rad):
@@ -23,61 +23,67 @@ def weather(lat, long):
 
 
 def place(lat, long, rad, which):
-    while True:
-        try:
-            recommended = []
-            def visit():
-                typeList = ["aquarium",
-                            "art_gallery",
-                            "beauty_salon",
-                            "clothing_store",
-                            "hindu_temple",
-                            "library",
-                            "mosque",
-                            "movie_theater",
-                            "museum",
-                            "night_club",
-                            "painter",
-                            "park",
-                            "shopping_mall",
-                            "spa",
-                            "stadium",
-                            "synagogue",
-                            "tourist_attraction",
-                            "zoo"]
 
-                rand = randint(0, len(typeList)-1)
-                return typeList[rand]
+    visTypeList = ["aquarium",
+                "art_gallery",
+                "beauty_salon",
+                "clothing_store",
+                "hindu_temple",
+                "library",
+                "mosque",
+                "movie_theater",
+                "museum",
+                "night_club",
+                "painter",
+                "park",
+                "shopping_mall",
+                "spa",
+                "stadium",
+                "synagogue",
+                "tourist_attraction",
+                "zoo"]
 
-            def eat():
-                typeList = ["bakery",
-                            "bar",
-                            "cafe",
-                            "liquor_store",
-                            "meal_takeaway",
-                            "restaurant"]
+    eatTypeList = ["bakery",
+                "bar",
+                "cafe",
+                "liquor_store",
+                "meal_takeaway",
+                "restaurant"]
 
-                rand = randint(0, len(typeList) - 1)
-                return typeList[rand]
+    def vis_generator():
+        while True:
+            yield choice(visTypeList)
 
-            if which == "eat":
-                placeType = eat()
-            else:
-                placeType = visit()
+    def eat_generator():
+        while True:
+            yield choice(eatTypeList)
 
-            url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=%s&type=%s&key=%s" % (
-                lat, long, rad, placeType, config.GG_API_KEY)
-            response = requests.get(url)
-            data = json.loads(response.text)
-            if data['status'] != 'ZERO_RESULTS':
-                for i in range(len(data['results'])):
-                    if data['results'][i]['rating'] >= 4:
-                        recommended.append(data['results'][i])
-                rand = randint(0, len(recommended)-1)
-                return recommended[rand]
-            else:
-              break
-        except:
-            pass
+    def generate(placeType):
+        added = []
+        url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=%s&type=%s&key=%s" % (
+            lat, long, rad, placeType, config.GG_API_KEY)
+        response = requests.get(url)
+        data = json.loads(response.text)
+        if data['status'] != 'ZERO_RESULTS':
+            for i in range(len(data['results'])):
+                if ('rating' in data['results'][i]) and (data['results'][i]['rating'] >= 4):
+                    added.append(data['results'][i])
+            return added
         else:
-            break
+            return []
+
+    vis_res, eat_res, recommended = {}, {}, []
+    if which == "visit":
+        while not recommended:
+            recommended = generate(vis_generator())
+        rand = randint(0, len(recommended) - 1)
+        vis_res = recommended[rand]
+        # DEBUG: print(vis_res)
+        return vis_res
+    else:
+        while not recommended:
+            recommended = generate(eat_generator())
+        rand = randint(0, len(recommended) - 1)
+        eat_res = recommended[rand]
+        # DEBUG: print(eat_res)
+        return eat_res
