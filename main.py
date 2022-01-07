@@ -1,6 +1,5 @@
-import os
-import config
 import telebot
+import config
 from telebot.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 
 bot = telebot.TeleBot(config.TELE_API_KEY)
@@ -17,7 +16,6 @@ bot.set_my_commands([
 def start(message):
     """
     Welcome message
-    Pinpoint user location
     """
 
     chat_id = message.chat.id
@@ -29,11 +27,18 @@ def start(message):
   
     welcome_text = f'Hi {chat_user}, welcome to WanderBot!'
     bot.send_message(chat_id=chat_id,text=welcome_text)
-    get_user_location(message)
+
+    button_text = 'What would you like to do?'
+
+    buttons = []
+    buttons.append(InlineKeyboardButton('Wander',callback_data='1'))
+    buttons.append(InlineKeyboardButton('Search',callback_data='2'))
+    reply_markup = InlineKeyboardMarkup([buttons])
+    bot.send_message(chat_id=chat_id,text=button_text,reply_markup=reply_markup)
 
     return
 
-def get_user_location(message):
+def set_user_location(message):
     keyboard = ReplyKeyboardMarkup(
         row_width=1,
         resize_keyboard=True,
@@ -58,10 +63,6 @@ def extract_location(message):
     location_text = f"Your location is {user_info['latitude']}, {user_info['longitude']}"
 
     bot.send_message(chat_id=chat_id,text=location_text)
-
-    #button_text = 'What would you like to do?'
-    #wanderButton = InlineKeyboardButton('Wander',callback_data='goto wander')
-    #searchButton = InlineKeyboardButton('Search',callback_data='goto search')
 
     return
 
