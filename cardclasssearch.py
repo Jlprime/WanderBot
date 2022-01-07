@@ -80,7 +80,7 @@ def place(city, which):
                 return {}
         rand = randint(0, len(recommended) - 1)
         res = recommended[rand]
-        print(res)
+        # print(res)
         return res
     else:
         while (not recommended and count != 10):
@@ -90,7 +90,5 @@ def place(city, which):
                 return {}
         rand = randint(0, len(recommended) - 1)
         res = recommended[rand]
-        print(res)
+        # print(res)
         return res
-
-place("Vatican City","visit")
