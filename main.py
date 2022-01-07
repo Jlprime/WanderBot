@@ -113,7 +113,7 @@ def detect_radius(message):
             bound_msg_sent = bot.send_message(chat_id=chat_id,text=bound_msg)
             bot.register_next_step_handler(bound_msg_sent, detect_radius)
             return
-        user_location['radius'] = rad
+        user_location['radius'] = rad * 1000
         success_msg = 'Radius successfully set.'
         bot.send_message(chat_id=chat_id,text=success_msg)
         start(message)
