@@ -1,8 +1,8 @@
-from types import LambdaType
 import telebot
 import config
 from telebot.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 from cardclass import cardClass
+from reversegeo import reverse_geocoder
 
 bot = telebot.TeleBot(config.TELE_API_KEY)
 
@@ -52,12 +52,16 @@ def handle_callback(call):
   action = call.data
   
   if action == 'wander':
-    wander(call.message)
-    return
+      bot.answer_callback_query(call.id)
+      wander(call.message)
+      return
 
   if action == 'search':
-    search(call.message)
-    return
+      bot.answer_callback_query(call.id)
+      search(call.message)
+      return
+  
+  return
 
 @bot.message_handler(commands=['config'])
 def set_user_location(message):
@@ -89,8 +93,8 @@ def detect_location(message):
 
     location_text = f'Your location is {latitude}, {longitude}'
 
-    success_msg = bot.send_message(chat_id=chat_id,text=location_text)
-    bot.register_next_step_handler(success_msg,wander)
+    bot.send_message(chat_id=chat_id,text=location_text)
+    wander(message)
 
     return
 
@@ -102,22 +106,26 @@ def extract_location(message):
 def wander(message):
     if not user_location:
         set_user_location(message)
+        return
     
     chat_id = message.chat.id
-
     lat = user_location['latitude']
     long = user_location['longitude']
     rad = 5000
 
-    curr_card = cardClass(lat,long,rad)
-
+    
     chat_user = user_info['chat_name']
-    #TODO curr_city
+    city = reverse_geocoder(str(lat),str(long))
+    print(city)
+    curr_card = cardClass(lat,long,rad)
     weather = curr_card.weather
     eat_place = curr_card.eatPlace['name']
     visit_place = curr_card.visitPlace['name']
+    print(weather)
+    print(eat_place)
+    print(visit_place)
 
-    msg = f'{weather},{eat_place},{visit_place}'
+    msg = f'{chat_user}\n{city}\n{weather}\n{eat_place}\n'#{visit_place}'
     bot.send_message(chat_id=chat_id,text=msg)
 
     return

@@ -69,14 +69,15 @@ def place(lat, long, rad, which):
                 lat, long, rad, placeType, config.GG_API_KEY)
             response = requests.get(url)
             data = json.loads(response.text)
-            for i in range(len(data['results'])):
-                if data['results'][i]['rating'] >= 4:
-                    recommended.append(data['results'][i])
-            rand = randint(0, len(recommended)-1)
-            return recommended[rand]
+            if data['status'] != 'ZERO_RESULTS':
+                for i in range(len(data['results'])):
+                    if data['results'][i]['rating'] >= 4:
+                        recommended.append(data['results'][i])
+                rand = randint(0, len(recommended)-1)
+                return recommended[rand]
+            else:
+              break
         except:
             pass
         else:
             break
-
-
