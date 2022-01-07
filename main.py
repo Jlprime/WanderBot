@@ -10,15 +10,15 @@ bot = telebot.TeleBot(TELE_API_KEY)
 
 bot.set_my_commands([
     BotCommand('start','Initialises the bot'),
-    BotCommand('wander','Find places near you!')])
+    BotCommand('wander','Find places near you!'),
+    BotCommand('search','Search by city')
+    ])
 
 @bot.message_handler(commands=['start'])
 def start(message):
   """
   Command that welcomes the user and configures the initial setup
   """
-
-  chat_id = message.chat.id
 
   if message.chat.type == 'private':
     chat_user = message.chat.first_name
@@ -28,3 +28,8 @@ def start(message):
   message_text = f'Hi {chat_user}'
 
   bot.reply_to(message, message_text)
+
+
+@bot.message_handler(commands=['search'])
+def search(chat):
+    pass
