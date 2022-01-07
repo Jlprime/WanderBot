@@ -127,10 +127,17 @@ def wander(message):
         chat_id=chat_id,
         latitude=curr_card.eatPlace['geometry']['location']['lat'],
         longitude=curr_card.eatPlace['geometry']['location']['lng'],
-        title='EATERY'+curr_card.eatPlace['name'],
+        title=curr_card.eatPlace['name'],
         address=curr_card.eatPlace['vicinity'],
         google_place_id=curr_card.eatPlace['place_id'])
-
+    bot.send_venue(
+        chat_id=chat_id,
+        latitude=curr_card.visitPlace['geometry']['location']['lat'],
+        longitude=curr_card.visitPlace['geometry']['location']['lng'],
+        title=curr_card.visitPlace['name'],
+        address=curr_card.visitPlace['vicinity'],
+        google_place_id=curr_card.visitPlace['place_id'])
+    
     return
 
 @bot.message_handler(commands=['search'])
