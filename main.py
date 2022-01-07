@@ -12,9 +12,10 @@ user_info = dict()
 user_location = dict()
 
 bot.set_my_commands([
-    BotCommand('start','Initialises the bot'),
-    BotCommand('wander','Find places to go near you'),
-    BotCommand('search','Find places at a specified city')
+    BotCommand('start','Initialises the bot.'),
+    BotCommand('wander','Find places to go near you.'),
+    BotCommand('search','Find places at a specified city.'),
+    BotCommand('config','Settings for the bot.')
     ])
 
 @bot.message_handler(commands=['start'])
@@ -38,7 +39,7 @@ def start(message):
 
     buttons = []
     buttons.append(InlineKeyboardButton('Wander',callback_data='wander'))
-    buttons.append(InlineKeyboardButton('Search',callback_data='search'))
+    buttons.append(InlineKeyboardButton('Search by City',callback_data='search'))
     reply_markup = InlineKeyboardMarkup([buttons])
     bot.send_message(chat_id=chat_id,text=button_text,reply_markup=reply_markup)
 
@@ -87,8 +88,8 @@ def config(message):
 
     button_text = 'Settings'
     buttons = []
-    buttons.append(InlineKeyboardButton('Set your location',callback_data='setloc'))
-    buttons.append(InlineKeyboardButton('Change search radius',callback_data='setrad'))
+    buttons.append(InlineKeyboardButton('Set Your Location',callback_data='setloc'))
+    buttons.append(InlineKeyboardButton('Change Search Radius',callback_data='setrad'))
     reply_markup = InlineKeyboardMarkup([buttons])
     bot.send_message(chat_id=chat_id,text=button_text,reply_markup=reply_markup)
 
@@ -152,13 +153,13 @@ def detect_location(message):
     user_location['latitude'] = latitude
     user_location['longitude'] = longitude
 
-    location_text = f'Your location is {latitude}, {longitude}.'
-    bot.send_message(chat_id=chat_id,text=location_text)
+    # location_text = f'Your location is {latitude}, {longitude}.'
+    # bot.send_message(chat_id=chat_id,text=location_text)
 
     if first_call:
-        user_location['radius'] = 5000
-        first_call_msg = 'Please hold while we provide you with your itinerary...'
-        bot.send_message(chat_id=chat_id,text=first_call_msg)
+        user_location.setdefault('radius',5000)
+        # first_call_msg = 'Please hold while we provide you with your itinerary...'
+        # bot.send_message(chat_id=chat_id,text=first_call_msg)
         bot.send_chat_action(chat_id=chat_id,action='typing')
         wander(message)
 
@@ -194,8 +195,8 @@ def itinerary(chat_id,chat_user,city,curr_card):
     placename = ['dining','visiting']
 
     caption_msg = (
-        f'Hello {chat_user},\n here\'s your itinerary for a day in {city}.\n\n'
-        f'{city} is currently experiencing {weather} with a temperature of {temp} deg C.\n\n'
+        f'Hello {chat_user},\nHere\'s your itinerary for a day in {city}.\n\n'
+        f'{city} is currently experiencing {weather} with a temperature of {temp:.1f} deg C.\n\n'
         f"First, you may grab some delicacies at {eat_place['name']} (Rating {eat_place['rating']})\n\n"
         f"After which, you can visit {visit_place['name']} (Rating {visit_place['rating']})"
     )
@@ -220,11 +221,11 @@ def itinerary(chat_id,chat_user,city,curr_card):
             bot.send_message(chat_id=chat_id,text=notfound_msg)
 
 def post_itinerary(chat_id):
-    button_text = 'What would you like to do?'
+    button_text = 'What would you like to do next?'
     row_one, row_two = [], []
-    row_one.append(InlineKeyboardButton('Change search radius',callback_data='setrad'))
+    row_one.append(InlineKeyboardButton('Change Search Radius',callback_data='setrad'))
     row_two.append(InlineKeyboardButton('Reroll',callback_data='wander'))
-    row_two.append(InlineKeyboardButton('Search',callback_data='search'))
+    row_two.append(InlineKeyboardButton('Search by City',callback_data='search'))
     reply_markup = InlineKeyboardMarkup([row_one,row_two])
     bot.send_message(chat_id=chat_id,text=button_text,reply_markup=reply_markup)
 
