@@ -23,7 +23,7 @@ def start(message):
   message_text = "Hi"
   print('Received message:', message_text)
 
-  bot.reply_to(message, message.text)
+  bot.reply_to(message, message_text)
 
 
 @bot.message_handler(commands=['search'])
