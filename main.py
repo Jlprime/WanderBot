@@ -175,25 +175,24 @@ def wander(message):
     eat_place = curr_card.eatPlace
     visit_place = curr_card.visitPlace
 
+    placelist = [eat_place, visit_place]
+    placename = ['dining','visiting']
+
     intro_msg = f'Hello {chat_user}, here\'s your itinerary for a day in {city}.\nCurrently, the weather is:\n{weather}'
     bot.send_message(chat_id=chat_id,text=intro_msg)
-    inter_msg = 'Here are the recommended places to dine and visit:'
-    bot.send_message(chat_id=chat_id,text=inter_msg)
-    bot.send_venue(
-        chat_id=chat_id,
-        latitude=eat_place['geometry']['location']['lat'],
-        longitude=eat_place['geometry']['location']['lng'],
-        title=eat_place['name'],
-        address=eat_place['vicinity'],
-        google_place_id=eat_place['place_id'])
-    bot.send_venue(
-        chat_id=chat_id,
-        latitude=visit_place['geometry']['location']['lat'],
-        longitude=visit_place['geometry']['location']['lng'],
-        title=visit_place['name'],
-        address=visit_place['vicinity'],
-        google_place_id=visit_place['place_id'])
-    
+    for idx, place in enumerate(placelist):
+        if place:
+            bot.send_venue(
+            chat_id=chat_id,
+            latitude=place['geometry']['location']['lat'],
+            longitude=place['geometry']['location']['lng'],
+            title=place['name'],
+            address=place['vicinity'],
+            google_place_id=place['place_id'])
+        else:
+            notfound_msg = f'It seems like we couldn\'t find any spots for {placename[idx]}. You can reroll to try again.'
+            bot.send_message(chat_id=chat_id,text=notfound_msg)
+
     button_text = 'What would you like to do?'
     buttons = []
     buttons.append(InlineKeyboardButton('Reroll',callback_data='wander'))
