@@ -1,6 +1,6 @@
 import telebot
 import config
-from telebot.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
+from telebot.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, KeyboardButton, ReplyKeyboardMarkup
 from cardclass import cardClass
 from cardclasssearch import cardClassSearch
 from reversegeo import reverse_geocoder
@@ -179,22 +179,31 @@ def wander(message):
     city = reverse_geocoder(str(lat),str(long))
     curr_card = cardClass(lat,long,rad)
     
-    itinerary(chat_id,chat_user,city,curr_card,'wander')
+    itinerary(chat_id,chat_user,city,curr_card)
     post_itinerary(chat_id)
 
     return
 
-def itinerary(chat_id,chat_user,city,curr_card,caller):
+def itinerary(chat_id,chat_user,city,curr_card):
     city = city.title()
-    weather = curr_card.weather
+    weather = (curr_card.weather).lower()
     eat_place = curr_card.eatPlace
     visit_place = curr_card.visitPlace
     placelist = [eat_place, visit_place]
     placename = ['dining','visiting']
-    img = retrievePics(eat_place['photo_reference'])
 
-    intro_msg = f'Hello {chat_user}, here\'s your itinerary for a day in {city}.\nCurrently, the weather is:\n{weather}'
-    bot.send_photo(chat_id=chat_id,photo=img,caption=intro_msg)
+    caption_msg = (
+        f'Hello {chat_user},\n here\'s your itinerary for a day in {city}.\n\n'
+        f'{city} is currently experiencing {weather}.\n\n'
+        f"First, you may grab some delicacies at {eat_place['name']} (Rating {eat_place['rating']})"
+        f"After which, you can visit {visit_place['name']} (Rating {visit_place['rating']})"
+    )
+
+    eat_img = InputMediaPhoto(retrievePics(eat_place['photos'][0]['photo_reference']),caption=caption_msg)
+    visit_img = InputMediaPhoto(retrievePics(visit_place['photos'][0]['photo_reference']))
+    imgs = [eat_img,visit_img]
+
+    bot.send_media_group(chat_id=chat_id,media=imgs)
 
     for idx, place in enumerate(placelist):
         if place:
@@ -206,7 +215,7 @@ def itinerary(chat_id,chat_user,city,curr_card,caller):
             address=place['vicinity'],
             google_place_id=place['place_id'])
         else:
-            notfound_msg = f'It seems like we couldn\'t find any spots for {placename[idx]}. You can reroll to try again.'
+            notfound_msg = f"It seems like we couldn't find any spots for {placename[idx]}. You can reroll to try again."
             bot.send_message(chat_id=chat_id,text=notfound_msg)
 
 def post_itinerary(chat_id):
@@ -236,7 +245,7 @@ def get_city(message):
         bot.send_message(chat_id,text=invalid_msg)
         post_itinerary(chat_id)
         return
-    itinerary(chat_id,chat_user,city,curr_card,'search')
+    itinerary(chat_id,chat_user,city,curr_card)
     post_itinerary(chat_id)
 
 bot.infinity_polling()

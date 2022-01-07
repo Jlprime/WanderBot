@@ -65,7 +65,7 @@ def place(city, which):
         data = json.loads(response.text)
         if data['status'] != 'ZERO_RESULTS':
             for i in range(len(data['results'])):
-                if ('rating' in data['results'][i]) and (data['results'][i]['rating'] >= 4):
+                if ('rating' in data['results'][i]) and (data['results'][i]['rating'] >= 4) and ('photos' in data['results'][i]):
                     added.append(data['results'][i])
             return added
         else:
