@@ -44,7 +44,7 @@ def start(message):
     `/config` - Bot settings
     ''')
 
-    bot.send_message(chat_id=chat_id,text=help_msg,parse_mode='MarkdownV2')
+    bot.send_message(chat_id=chat_id,text=help_msg)
 
     button_text = 'What would you like to do?'
 
