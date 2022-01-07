@@ -37,14 +37,14 @@ def start(message):
         bot.send_message(chat_id=chat_id,text='Please use this bot in a private chat!')
         return
 
-    help_msg = ('''
-    `/start` - Your first command (to initialise the bot).\n
-    `/wander` - Find places to go in your city.\n
-    `/search` - Find places to go in another city.\n
-    `/config` - Bot settings
-    ''')
-
-    bot.send_message(chat_id=chat_id,text=help_msg)
+    # help_msg = ('''
+    # `/start` - Your first command (to initialise the bot).\n
+    # `/wander` - Find places to go in your city.\n
+    # `/search` - Find places to go in another city.\n
+    # `/config` - Bot settings
+    # ''')
+    #
+    # bot.send_message(chat_id=chat_id,text=help_msg)
 
     button_text = 'What would you like to do?'
 
