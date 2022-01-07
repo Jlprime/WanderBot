@@ -25,7 +25,7 @@ def start(message):
     if message.chat.type == 'private':
         chat_user = message.chat.first_name
     else:
-        chat_user = message.chat.title
+        bot.send_message(chat_id=chat_id,text='Please use this bot in a private chat!')
   
     welcome_text = f'Hi {chat_user}, welcome to WanderBot!'
     bot.send_message(chat_id=chat_id,text=welcome_text)
