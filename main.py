@@ -12,10 +12,10 @@ user_info = dict()
 user_location = dict()
 
 bot.set_my_commands([
-    BotCommand('start','Initialises the bot.'),
-    BotCommand('wander','Find places to go near you.'),
-    BotCommand('search','Find places at a specified city.'),
-    BotCommand('config','Settings for the bot.')
+    BotCommand('start','Initialises the bot'),
+    BotCommand('wander','Find places to go in your city'),
+    BotCommand('search','Find places to go in another city'),
+    BotCommand('config','Bot settings')
     ])
 
 @bot.message_handler(commands=['start'])
@@ -34,6 +34,16 @@ def start(message):
             bot.send_message(chat_id=chat_id,text=welcome_text)
     else:
         bot.send_message(chat_id=chat_id,text='Please use this bot in a private chat!')
+        return
+
+    help_msg = ('''
+    `/start` - Your first command (to initialise the bot).\n
+    `/wander` - Find places to go in your city.\n
+    `/search` - Find places to go in another city.\n
+    `/config` - Bot settings
+    ''')
+
+    bot.send_message(chat_id=chat_id,text=help_msg,parse_mode='MarkdownV2')
 
     button_text = 'What would you like to do?'
 
