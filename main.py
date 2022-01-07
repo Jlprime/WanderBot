@@ -12,17 +12,6 @@ bot.set_my_commands([
     BotCommand('start','Initialises the bot'),
     BotCommand('wander','Find places near you!')])
 
-def request_start(chat_id):
-  """
-  Helper function to request user to execute command /start
-  """
-
-  if chat_id not in cart:
-    bot.send_message(chat_id=chat_id, text='Please start the bot by sending /start')
-  
-  return
-
-
 @bot.message_handler(commands=['start'])
 def start(message):
   """
