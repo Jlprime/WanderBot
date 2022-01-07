@@ -4,6 +4,7 @@ from telebot.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup
 from cardclass import cardClass
 from cardclasssearch import cardClassSearch
 from reversegeo import reverse_geocoder
+from retrievepics import retrievePics
 
 bot = telebot.TeleBot(config.TELE_API_KEY)
 
@@ -190,10 +191,11 @@ def itinerary(chat_id,chat_user,city,curr_card,caller):
     visit_place = curr_card.visitPlace
     placelist = [eat_place, visit_place]
     placename = ['dining','visiting']
+    img = retrievePics(eat_place['photo_reference'])
 
     intro_msg = f'Hello {chat_user}, here\'s your itinerary for a day in {city}.\nCurrently, the weather is:\n{weather}'
+    bot.send_photo(chat_id=chat_id,photo=img,caption=intro_msg)
 
-    bot.send_message(chat_id=chat_id,text=intro_msg)
     for idx, place in enumerate(placelist):
         if place:
             bot.send_venue(
