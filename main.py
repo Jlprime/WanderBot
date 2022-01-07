@@ -186,7 +186,8 @@ def wander(message):
 
 def itinerary(chat_id,chat_user,city,curr_card):
     city = city.title()
-    weather = (curr_card.weather).lower()
+    weather = (curr_card.weather[0]).lower()
+    temp = curr_card.weather[1]
     eat_place = curr_card.eatPlace
     visit_place = curr_card.visitPlace
     placelist = [eat_place, visit_place]
@@ -194,8 +195,8 @@ def itinerary(chat_id,chat_user,city,curr_card):
 
     caption_msg = (
         f'Hello {chat_user},\n here\'s your itinerary for a day in {city}.\n\n'
-        f'{city} is currently experiencing {weather}.\n\n'
-        f"First, you may grab some delicacies at {eat_place['name']} (Rating {eat_place['rating']})"
+        f'{city} is currently experiencing {weather} with a temperature of {temp} deg C.\n\n'
+        f"First, you may grab some delicacies at {eat_place['name']} (Rating {eat_place['rating']})\n\n"
         f"After which, you can visit {visit_place['name']} (Rating {visit_place['rating']})"
     )
 
