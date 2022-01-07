@@ -195,13 +195,13 @@ def itinerary(chat_id,chat_user,city,curr_card):
     placename = ['dining','visiting']
 
     caption_msg = (
-        f'Hello {chat_user},\nHere\'s your itinerary for a day in {city}.\n\n'
-        f'{city} is currently experiencing {weather} with a temperature of {temp:.1f} deg C.\n\n'
+        f'Hello {chat_user},\nHere\'s your itinerary for a day in *{city}*.\n\n'
+        f'*{city}* is currently experiencing *{weather}* with a temperature of *{temp:.1f} deg C*.\n\n'
         f"First, you may grab some delicacies at {eat_place['name']} (Rating {eat_place['rating']})\n\n"
-        f"After which, you can visit {visit_place['name']} (Rating {visit_place['rating']})"
+        f"After which, you can visit {visit_place['name']} (Rating {visit_place['rating']})",
     )
 
-    eat_img = InputMediaPhoto(retrievePics(eat_place['photos'][0]['photo_reference']),caption=caption_msg)
+    eat_img = InputMediaPhoto(retrievePics(eat_place['photos'][0]['photo_reference']),caption=caption_msg, parse_mode="MarkdownV2")
     visit_img = InputMediaPhoto(retrievePics(visit_place['photos'][0]['photo_reference']))
     imgs = [eat_img,visit_img]
 
