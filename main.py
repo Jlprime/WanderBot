@@ -6,6 +6,7 @@ from cardclasssearch import cardClassSearch
 from reversegeo import reverse_geocoder
 from retrievepics import retrievePics
 
+
 bot = telebot.TeleBot(config.TELE_API_KEY)
 
 user_info = dict()
@@ -211,7 +212,7 @@ def itinerary(chat_id,chat_user,city,curr_card):
         f"After which, you can visit {visit_place['name']} (Rating {visit_place['rating']})",
     )
 
-    eat_img = InputMediaPhoto(retrievePics(eat_place['photos'][0]['photo_reference']),caption=caption_msg, parse_mode="HTML")
+    eat_img = InputMediaPhoto(retrievePics(eat_place['photos'][0]['photo_reference']),caption=caption_msg, parse_mode='HTML')
     visit_img = InputMediaPhoto(retrievePics(visit_place['photos'][0]['photo_reference']))
     imgs = [eat_img,visit_img]
 
