@@ -2,6 +2,7 @@ import requests
 import json
 import config
 from random import randint, choice
+from reversegeo import geocoder_radius
 
 class cardClassSearch:
     def __init__(self, city):
@@ -54,9 +55,12 @@ def place(city, which):
 
     def generate(placeType):
         added = []
-        url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s&type=%s" % (
-            city, config.GG_API_KEY, placeType)
-        print(url)
+        try:
+            cityDetails = geocoder_radius(city)
+        except:
+            return []
+        url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=%s&type=%s&key=%s" % (
+            cityDetails[0], cityDetails[1], cityDetails[2], placeType, config.GG_API_KEY)
         response = requests.get(url)
         data = json.loads(response.text)
         if data['status'] != 'ZERO_RESULTS':
@@ -67,7 +71,7 @@ def place(city, which):
         else:
             return []
 
-    vis_res, eat_res, recommended, count = {}, {}, [], 0
+    recommended, count = [], 0
     if which == "visit":
         while (not recommended and count != 10):
             recommended = generate(vis_generator())
@@ -75,8 +79,9 @@ def place(city, which):
             if count == 10:
                 return {}
         rand = randint(0, len(recommended) - 1)
-        vis_res = recommended[rand]
-        return vis_res
+        res = recommended[rand]
+        print(res)
+        return res
     else:
         while (not recommended and count != 10):
             recommended = generate(eat_generator())
@@ -84,5 +89,8 @@ def place(city, which):
             if count == 10:
                 return {}
         rand = randint(0, len(recommended) - 1)
-        eat_res = recommended[rand]
-        return eat_res
+        res = recommended[rand]
+        print(res)
+        return res
+
+place("Vatican City","visit")
