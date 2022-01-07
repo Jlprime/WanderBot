@@ -29,3 +29,5 @@ def start(message):
 @bot.message_handler(commands=['search'])
 def search():
     pass
+
+bot.infinity_polling()
