@@ -4,8 +4,8 @@ import json
 def cardClass(lat, long):
     def __init__(self):
         self.weather = weather(lat, long)
-        self.eatPlace = eatPlace(lat, long)
-        self.visitPlace = visitPlace(lat, long)
+        #self.eatPlace = eatPlace(lat, long)
+        #self.visitPlace = visitPlace(lat, long)
 
 def weather(lat, long):
     #Using OpenWeather API, we can derive the current weather conditions of the current place of the user
@@ -16,8 +16,5 @@ def weather(lat, long):
 
     response = requests.get(url)
     data = json.loads(response.text)
-    print(data)
     current = data['weather'][0]['description']
-    print(current)
-
-weather(1.3521,103.8198)
+    return current.title()
