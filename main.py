@@ -91,7 +91,7 @@ def detect_location(message):
     user_location['latitude'] = latitude
     user_location['longitude'] = longitude
 
-    location_text = f'Your location is {latitude}, {longitude}'
+    location_text = f'Your location is {latitude}, {longitude}.\nPlease hold while we provide you with your itinerary...'
 
     bot.send_message(chat_id=chat_id,text=location_text)
     wander(message)
@@ -125,9 +125,9 @@ def wander(message):
     bot.send_message(chat_id=chat_id,text=inter_msg)
     bot.send_venue(
         chat_id=chat_id,
-        latitude=lat,
-        longitude=long,
-        title=curr_card.eatPlace['name'],
+        latitude=curr_card.eatPlace['geometry']['location']['lat'],
+        longitude=curr_card.eatPlace['geometry']['location']['lng'],
+        title='EATERY'+curr_card.eatPlace['name'],
         address=curr_card.eatPlace['vicinity'],
         google_place_id=curr_card.eatPlace['place_id'])
 
