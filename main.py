@@ -24,7 +24,6 @@ def start(message):
     """
     Initialising the bot
     """
-
     chat_id = message.chat.id
     
     if message.chat.type == 'private':
@@ -57,7 +56,6 @@ def handle_callback(call):
     """
     Handles callback queries to execute their respective functions
     """
-
     action = call.data
 
     if action == 'wander':
@@ -92,7 +90,10 @@ def config(message):
     Handles bot settings
     '''
     chat_id = message.chat.id
-
+    if not ('chat_name' in user_info):
+        bot.send_message(chat_id=chat_id,text='Please run /start first!')
+        return
+    
     button_text = 'Settings'
     buttons = []
     buttons.append(InlineKeyboardButton('Set Your Location',callback_data='setloc'))
@@ -180,8 +181,9 @@ def wander(message):
 
     chat_id = message.chat.id
 
-    if not user_info['chat_name']:
+    if not ('chat_name' in user_info):
         bot.send_message(chat_id=chat_id,text='Please run /start first!')
+        return
 
     lat = user_location['latitude']
     long = user_location['longitude']
@@ -243,6 +245,10 @@ def post_itinerary(chat_id):
 @bot.message_handler(commands=['search'])
 def search(message):
     chat_id = message.chat.id
+    if not ('chat_name' in user_info):
+        bot.send_message(chat_id=chat_id,text='Please run /start first!')
+        return
+
     search_msg = 'Which city do you wish to search in?'
     search_msg_sent = bot.send_message(chat_id=chat_id,text=search_msg)
     bot.register_next_step_handler(search_msg_sent,get_city)
