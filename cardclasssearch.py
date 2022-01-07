@@ -92,5 +92,3 @@ def place(city, which):
         res = recommended[rand]
         print(res)
         return res
-
-place("Vatican City","visit")
