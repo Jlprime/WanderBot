@@ -66,12 +66,12 @@ def handle_callback(call):
     
     if action == 'setloc':
         bot.answer_callback_query(call.id)
-        set_user_radius(call.message)
+        set_user_location(call.message)
         return
     
     if action == 'setrad':
         bot.answer_callback_query(call.id)
-        set_user_location(call.message)
+        set_user_radius(call.message)
         return
 
     return
@@ -151,7 +151,7 @@ def detect_location(message):
         user_location['radius'] = 5000
         first_call_msg = 'Please hold while we provide you with your itinerary...'
         bot.send_message(chat_id=chat_id,text=first_call_msg)
-        bot.send_chat_action(chat_id=chat_id,action_string='typing')
+        bot.send_chat_action(chat_id=chat_id,action='typing')
         wander(message)
 
     return
