@@ -20,16 +20,14 @@ def start(message):
   Command that welcomes the user and configures the initial setup
   """
 
-  if message.chat.type == 'private':
-    chat_user = message.chat.first_name
-  else:
-    chat_user = message.chat.title
-  
-  message_text = f'Hi {chat_user}'
+  message_text = "Hi"
+  print('Received message:', message_text)
 
   bot.reply_to(message, message_text)
 
 
 @bot.message_handler(commands=['search'])
-def search(chat):
+def search():
     pass
+
+bot.infinity_polling()
