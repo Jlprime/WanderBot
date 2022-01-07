@@ -3,7 +3,7 @@ import json
 import config
 from random import randint
 
-def cardClass():
+class cardClass:
     def __init__(self, lat, long, rad):
         self.weather = weather(lat, long)
         self.eatPlace = place(lat, long, rad, "eat")
