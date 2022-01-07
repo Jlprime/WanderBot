@@ -3,24 +3,22 @@ import json
 import config
 from random import randint, choice
 
-class cardClass:
-    def __init__(self, lat, long, rad):
-        self.weather = weather(lat, long)
-        self.eatPlace = place(lat, long, rad, "eat")
-        self.visitPlace = place(lat, long, rad, "visit")
+class cardClassSearch:
+    def __init__(self, city):
+        self.weather = weather(city)
+        self.eatPlace = place(city, "eat")
+        self.visitPlace = place(city, "visit")
 
 
-def weather(lat, long):
+def weather(city):
     # Using OpenWeather API, we can derive the current weather conditions of the current place of the user
-    url = "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&units=metric" % (lat, long, config.WEATHER_API_KEY)
-
+    url = "http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s" % (city, config.WEATHER_API_KEY)
     response = requests.get(url)
     data = json.loads(response.text)
     current = data['weather'][0]['description']
     return current.title()
 
-
-def place(lat, long, rad, which):
+def place(city, which):
 
     visTypeList = ["aquarium",
                 "art_gallery",
@@ -56,8 +54,8 @@ def place(lat, long, rad, which):
 
     def generate(placeType):
         added = []
-        url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=%s&type=%s&key=%s" % (
-            lat, long, rad, placeType, config.GG_API_KEY)
+        url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s&type=%s" % (
+            city, config.GG_API_KEY, placeType)
         print(url)
         response = requests.get(url)
         data = json.loads(response.text)
@@ -78,7 +76,6 @@ def place(lat, long, rad, which):
                 return {}
         rand = randint(0, len(recommended) - 1)
         vis_res = recommended[rand]
-        # DEBUG: print(vis_res)
         return vis_res
     else:
         while (not recommended and count != 10):
@@ -88,5 +85,4 @@ def place(lat, long, rad, which):
                 return {}
         rand = randint(0, len(recommended) - 1)
         eat_res = recommended[rand]
-        # DEBUG: print(eat_res)
         return eat_res
