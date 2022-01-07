@@ -25,7 +25,7 @@ def weather(lat, long):
 def place(lat, long, rad, which):
     while True:
         try:
-            recommendedEat, recommendedVisit, recommended = [], [], []
+            recommended = []
             def visit():
                 typeList = ["aquarium",
                             "art_gallery",

@@ -1,6 +1,8 @@
+from types import LambdaType
 import telebot
 import config
 from telebot.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
+from cardclass import cardClass
 
 bot = telebot.TeleBot(config.TELE_API_KEY)
 
@@ -24,6 +26,7 @@ def start(message):
     
     if message.chat.type == 'private':
         chat_user = message.chat.first_name
+        user_info['chat_name'] = chat_user
     else:
         bot.send_message(chat_id=chat_id,text='Please use this bot in a private chat!')
   
@@ -102,7 +105,21 @@ def wander(message):
     
     chat_id = message.chat.id
 
-    
+    lat = user_location['latitude']
+    long = user_location['longitude']
+    rad = 5000
+
+    curr_card = cardClass(lat,long,rad)
+
+    chat_user = user_info['chat_name']
+    #TODO curr_city
+    weather = curr_card.weather
+    eat_place = curr_card.eatPlace['name']
+    visit_place = curr_card.visitPlace['name']
+
+    msg = f'{weather},{eat_place},{visit_place}'
+    bot.send_message(chat_id=chat_id,text=msg)
+
     return
 
 @bot.message_handler(commands=['search'])
