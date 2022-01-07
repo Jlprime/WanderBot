@@ -30,7 +30,7 @@ def start(message):
     else:
         bot.send_message(chat_id=chat_id,text='Please use this bot in a private chat!')
   
-    welcome_text = f'Hi {chat_user}, welcome to WanderBot!'
+    welcome_text = f'Hello {chat_user}, welcome to WanderBot!'
     bot.send_message(chat_id=chat_id,text=welcome_text)
 
     button_text = 'What would you like to do?'
@@ -116,17 +116,20 @@ def wander(message):
     
     chat_user = user_info['chat_name']
     city = reverse_geocoder(str(lat),str(long))
-    print(city)
     curr_card = cardClass(lat,long,rad)
     weather = curr_card.weather
-    eat_place = curr_card.eatPlace['name']
-    visit_place = curr_card.visitPlace['name']
-    print(weather)
-    print(eat_place)
-    print(visit_place)
 
-    msg = f'{chat_user}\n{city}\n{weather}\n{eat_place}\n'#{visit_place}'
-    bot.send_message(chat_id=chat_id,text=msg)
+    intro_msg = f'Hello {chat_user}, here\'s your itinerary for a day in {city}.\nCurrently, the weather is:\n{weather}'
+    bot.send_message(chat_id=chat_id,text=intro_msg)
+    inter_msg = 'Here are the recommended places to dine and visit:'
+    bot.send_message(chat_id=chat_id,text=inter_msg)
+    bot.send_venue(
+        chat_id=chat_id,
+        latitude=lat,
+        longitude=long,
+        title=curr_card.eatPlace['name'],
+        address=curr_card.eatPlace['vicinity'],
+        google_place_id=curr_card.eatPlace['place_id'])
 
     return
 
