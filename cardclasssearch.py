@@ -8,7 +8,9 @@ class cardClassSearch:
     def __init__(self, city):
         self.weather = weather(city)
         self.eatPlace = place(city, "eat")
-        self.visitPlace = place(city, "visit")
+        self.visitPlaceholder = place(city, "visit", popped=None)
+        self.visitPlace = self.visitPlaceholder[0]
+        self.visitPlace2 = place(city, "visit2", popped=self.visitPlaceholder[1])
 
 
 def weather(city):
@@ -22,7 +24,7 @@ def weather(city):
     else:
         return []
 
-def place(city, which):
+def place(city, which, popped=None):
 
     visTypeList = ["aquarium",
                 "art_gallery",
@@ -50,8 +52,12 @@ def place(city, which):
                 "meal_takeaway",
                 "restaurant"]
 
-    def vis_generator():
-        return choice(visTypeList)
+    def vis_generator(popped):
+        try:
+            visTypeList.pop(visTypeList.index(popped))
+            return choice(visTypeList)
+        except:
+            return choice(visTypeList)
 
     def eat_generator():
         return choice(eatTypeList)
@@ -76,8 +82,20 @@ def place(city, which):
 
     recommended, count = [], 0
     if which == "visit":
+        poppedType = ""
         while (not recommended and count != 10):
-            recommended = generate(vis_generator())
+            poppedType = vis_generator(popped)
+            recommended = generate(poppedType)
+            count += 1
+            if count == 10:
+                return {}
+        rand = randint(0, len(recommended) - 1)
+        res = recommended[rand]
+        # print(res)
+        return [res, poppedType]
+    elif which == "visit2":
+        while (not recommended and count != 10):
+            recommended = generate(vis_generator(popped))
             count += 1
             if count == 10:
                 return {}

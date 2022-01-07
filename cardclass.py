@@ -7,7 +7,9 @@ class cardClass:
     def __init__(self, lat, long, rad):
         self.weather = weather(lat, long)
         self.eatPlace = place(lat, long, rad, "eat")
-        self.visitPlace = place(lat, long, rad, "visit")
+        self.visitPlaceholder = place(lat, long, rad, "visit", popped=None)
+        self.visitPlace = self.visitPlaceholder[0]
+        self.visitPlace2 = place(lat, long, rad, "visit2", popped=self.visitPlaceholder[1])
 
 
 def weather(lat, long):
@@ -21,7 +23,7 @@ def weather(lat, long):
     else:
         return []
 
-def place(lat, long, rad, which):
+def place(lat, long, rad, which, popped=None):
 
     visTypeList = ["aquarium",
                 "art_gallery",
@@ -49,8 +51,12 @@ def place(lat, long, rad, which):
                 "meal_takeaway",
                 "restaurant"]
 
-    def vis_generator():
-        return choice(visTypeList)
+    def vis_generator(popped=None):
+        try:
+            visTypeList.pop(visTypeList.index(popped))
+            return choice(visTypeList)
+        except:
+            return choice(visTypeList)
 
     def eat_generator():
         return choice(eatTypeList)
@@ -59,7 +65,7 @@ def place(lat, long, rad, which):
         added = []
         url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=%s&type=%s&key=%s" % (
             lat, long, rad, placeType, config.GG_API_KEY)
-        print(url)
+        # print(url)
         response = requests.get(url)
         data = json.loads(response.text)
         if data['status'] != 'ZERO_RESULTS':
@@ -70,17 +76,29 @@ def place(lat, long, rad, which):
         else:
             return []
 
-    vis_res, eat_res, recommended, count = {}, {}, [], 0
+    recommended, count = [], 0
     if which == "visit":
+        poppedType = ""
         while (not recommended and count != 10):
-            recommended = generate(vis_generator())
+            poppedType = vis_generator(popped)
+            recommended = generate(poppedType)
             count += 1
             if count == 10:
                 return {}
         rand = randint(0, len(recommended) - 1)
-        vis_res = recommended[rand]
+        res = recommended[rand]
         # DEBUG: print(vis_res)
-        return vis_res
+        return [res, poppedType]
+    elif which == "visit2":
+        while (not recommended and count != 10):
+            recommended = generate(vis_generator(popped))
+            count += 1
+            if count == 10:
+                return {}
+        rand = randint(0, len(recommended) - 1)
+        res = recommended[rand]
+        # print(res)
+        return res
     else:
         while (not recommended and count != 10):
             recommended = generate(eat_generator())
@@ -88,6 +106,6 @@ def place(lat, long, rad, which):
             if count == 10:
                 return {}
         rand = randint(0, len(recommended) - 1)
-        eat_res = recommended[rand]
+        res = recommended[rand]
         # DEBUG: print(eat_res)
-        return eat_res
+        return res
