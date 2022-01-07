@@ -16,9 +16,10 @@ def weather(lat, long):
 
     response = requests.get(url)
     data = json.loads(response.text)
-    current = data['weather'][0]['description']
-    return current.title()
-
+    if data:
+        return [data['weather'][0]['description'].title(), data['main']['temp']]
+    else:
+        return []
 
 def place(lat, long, rad, which):
 
