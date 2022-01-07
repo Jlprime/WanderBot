@@ -8,15 +8,16 @@ def cardClass(lat, long):
         self.visitPlace = visitPlace(lat, long)
 
 def weather(lat, long):
+    #Using OpenWeather API, we can derive the current weather conditions of the current place of the user
     api_key = "5649fe25da87c63923302dbd96adf26e"
     lat = lat
     lon = long
-    url = "api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s" % (lat, lon, api_key)
+    url = "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&units=metric" % (lat, lon, api_key)
 
     response = requests.get(url)
     data = json.loads(response.text)
     print(data)
-    #current = data["çurrent"]["weather"]["main"]
-    #return current
+    current = data['weather'][0]['description']
+    print(current)
 
-#weather(1.3521,103.8198)
+weather(1.3521,103.8198)
