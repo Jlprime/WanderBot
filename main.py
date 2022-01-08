@@ -294,12 +294,12 @@ def get_city(message):
     chat_id = message.chat.id
     bot.send_chat_action(chat_id=chat_id,action='typing')
     chat_user = user_info['chat_name']
-    city = str(message.text).lower()
-    if lambda message: message.document.mime_type != 'text/plain':
-        unknownerr_msg = 'There was an error due to an invalid message. Please try again.'
+    if message.text == None:
+        unknownerr_msg = 'There was an error due to an invalid message. Please try the command again.'
         bot.send_message(chat_id,text=unknownerr_msg)
         return
     else:
+        city = str(message.text).title()
         curr_card = cardClassSearch(city)
 
     if not curr_card.eatPlace and not curr_card.visitPlace:
