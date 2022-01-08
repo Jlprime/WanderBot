@@ -4,7 +4,7 @@ For Hack &amp; Roll 2022
 
 ## Inspiration
 As avid travelers and people who generally enjoy finding new places in Singapore, we thought that we could make a simple *something* that will help those who wish to be spontaneous in a new and unfamiliar city, without being too imposing or complicated to use. That's why we chose Telegram, which is fast becoming a dominant messaging app in general.
----
+
 ## What it does
 **WanderBot** provides the user with a *customised* 'itinerary' of sorts. In keeping with the spirit of spontaneity, this 'itinerary' is effectively a list of suggestions, rather a prescribed minute-by-minute schedule. The 'itinerary' is obtained either through geolocation^ - wherein the bot factors in the Telegram user's exact location and generates places-of-interest within a specified radius (default 5 km) - or through text search, which will generate according to a city's predetermined centre point.
 
@@ -18,7 +18,7 @@ Each section will have accompanying images and locations that can be accessed th
 Every iteration of the generated 'itinerary' is randomly generated with each query, keeping the experience unpredictable and exciting. Users can choose to "Reroll" their itinerary if it is not to their liking, or change the radius of search (up to a maximum of 50 km). 
 
 ^The user will be prompted for permission before location is obtained.
----
+
 ## How we built it
 Utilizing Python as the main language with some JSON to parse the called data, we implemented multiple APIs into our bot, including:
 - **pyTelegrambotAPI**
@@ -26,7 +26,7 @@ Utilizing Python as the main language with some JSON to parse the called data, w
 - Google's **Places API** (Place Search and Place Photos) which is the backbone of the bot
 - Geopy Python Package, which implements **Nominatim API** for geocoding
 WanderBot is also hosted on **Heroku**.
----
+
 ## Challenges we ran into
 The biggest challenge was also our biggest benefactor: Places API. As college students with less-than-desirable financial prospects, we had to rely on the free credit given to new Places API users for everything from testing to debugging. We had to therefore meticulously plan every step we do before even knowing if it works, just so that we avoid busting the limit and sending us both into bankruptcy. This was a particular issue with Photos, which costs more to request. (API was intensely useful, though, so thanks Google!)
 
