@@ -1,7 +1,7 @@
 import requests
 import json
-import config
 from random import randint, choice
+import os
 
 class cardClass:
     def __init__(self, lat, long, rad):
@@ -14,7 +14,7 @@ class cardClass:
 
 def weather(lat, long):
     # Using OpenWeather API, we can derive the current weather conditions of the current place of the user
-    url = "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&units=metric" % (lat, long, config.WEATHER_API_KEY)
+    url = "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&units=metric" % (lat, long, os.getenv('WEATHER_TOKEN') )
 
     response = requests.get(url)
     data = json.loads(response.text)
@@ -63,7 +63,7 @@ def place(lat, long, rad, which, popped=None):
     def generate(placeType):
         added = []
         url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=%s&type=%s&key=%s" % (
-            lat, long, rad, placeType, config.GG_API_KEY)
+            lat, long, rad, placeType, os.getenv('GG_TOKEN') )
         # print(url)
         response = requests.get(url)
         data = json.loads(response.text)

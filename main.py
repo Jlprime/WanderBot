@@ -1,7 +1,6 @@
 import os
 from flask import Flask, request
 import telebot
-import config
 from telebot.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, KeyboardButton, ReplyKeyboardMarkup
 from cardclass import cardClass
 from cardclasssearch import cardClassSearch

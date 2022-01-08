@@ -1,6 +1,6 @@
+import os
 import requests
 import json
-import config
 from random import randint, choice
 from reversegeo import geocoder_radius
 
@@ -15,7 +15,7 @@ class cardClassSearch:
 
 def weather(city):
     # Using OpenWeather API, we can derive the current weather conditions of the current place of the user
-    url = "http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric" % (city, config.WEATHER_API_KEY)
+    url = "http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric" % (city, os.getenv('WEATHER_TOKEN') )
     response = requests.get(url)
     data = json.loads(response.text)
     # print (data)
@@ -69,7 +69,7 @@ def place(city, which, popped=None):
         except:
             return []
         url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=%s&type=%s&key=%s" % (
-            cityDetails[0], cityDetails[1], cityDetails[2], placeType, config.GG_API_KEY)
+            cityDetails[0], cityDetails[1], cityDetails[2], placeType, os.getenv('GG_TOKEN') )
         response = requests.get(url)
         data = json.loads(response.text)
         if data['status'] != 'ZERO_RESULTS':
