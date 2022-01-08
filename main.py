@@ -204,19 +204,22 @@ def itinerary(chat_id,chat_user,city,curr_card):
     temp = curr_card.weather[1]
     eat_place = curr_card.eatPlace
     visit_place = curr_card.visitPlace
+    visit_place2 = curr_card.visitPlace2
     placelist = [eat_place, visit_place]
-    placename = ['dining','visiting']
-
+    placename = ['dining','a place to visit','another place to visit']
+    
     caption_msg = (
         f"Hello {chat_user},\nHere\'s your itinerary for a day in <b>{city}</b>.\n\n"
         f"<b>{city}</b> is currently experiencing <b>{weather}</b> with a temperature of <b>{temp:.1f} deg C</b>.\n\n"
-        f"First, you may grab some delicacies at {eat_place['name']} ({eat_place['rating']}☆ / 5☆)\n\n"
-        f"After which, you can visit {visit_place['name']} (Rating {visit_place['rating']}☆ / 5☆)"
+        f"First, you can visit {visit_place['name']} ({visit_place['rating']}☆ / 5☆)"
+        f"Then, you may grab some delicacies at {eat_place['name']} ({eat_place['rating']}☆ / 5☆)\n\n"
+        f"After which, you can visit {visit_place2['name']} (Rating {visit_place2['rating']}☆ / 5☆)"
     )
 
-    eat_img = InputMediaPhoto(retrievePics(eat_place['photos'][0]['photo_reference']),caption=caption_msg,parse_mode='HTML')
-    visit_img = InputMediaPhoto(retrievePics(visit_place['photos'][0]['photo_reference']))
-    imgs = [eat_img,visit_img]
+    visit_img = InputMediaPhoto(retrievePics(visit_place['photos'][0]['photo_reference']),caption=caption_msg,parse_mode='HTML')
+    eat_img = InputMediaPhoto(retrievePics(eat_place['photos'][0]['photo_reference']))
+    visit_img2 = InputMediaPhoto(retrievePics(visit_place2['photos'][0]['photo_reference']))
+    imgs = [visit_img,eat_img,visit_img2]
 
     bot.send_media_group(chat_id=chat_id,media=imgs)
 
