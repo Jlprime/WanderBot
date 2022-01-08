@@ -35,10 +35,9 @@ def start(message):
         if not user_info:
             user_info['chat_name'] = chat_user
         welcome_msg = (
-            f'Hello {chat_user}, welcome to WanderBot!\n\n'
-            '/start - Your first command (to initialise the bot).\n'
-            '/wander - Find places to go in your city.\n'
-            '/search - Find places to go in another city.\n'
+            f'Hello {chat_user}, welcome to WanderBot - a bot for the wanderlust of the indecisive!\n\n'
+            '/wander - Find suggested places to go from your current location.\n'
+            '/search - Find suggested places to go in any city.\n'
             '/config - Bot settings.\n\n'
             'What would you like to do?'
         )
@@ -242,11 +241,13 @@ def itinerary(chat_id,chat_user,city,curr_card):
     placename = ['dining','a place to visit','another place to visit']
     
     caption_msg = (
-        f"Hello {chat_user},\nHere\'s your itinerary for a day in <b>{city}</b>.\n\n"
+        f"Hey {chat_user},\nHere\'s your itinerary for a day in <b>{city}</b>.\n\n"
         f"<b>{city}</b> is currently experiencing <b>{weather}</b> with a temperature of <b>{temp:.1f}°C</b>.\n\n"
-        f"First, you can visit {visit_place['name']}. ({visit_place['rating']}☆ / 5☆)\n\n"
-        f"Then, you may grab some delicacies at {eat_place['name']}. ({eat_place['rating']}☆ / 5☆)\n\n"
-        f"After which, you can visit {visit_place2['name']}. ({visit_place2['rating']}☆ / 5☆)"
+        f"<b><u>Our suggestions:</u></b>\n"
+        f"You can start by visiting {visit_place['name']}. ({visit_place['rating']}☆ / 5☆)\n\n"
+        f"After which, you may grab some refreshments at {eat_place['name']}. ({eat_place['rating']}☆ / 5☆)\n\n"
+        f"To end your day, you can visit {visit_place2['name']}. ({visit_place2['rating']}☆ / 5☆)\n\n"
+        f"Enjoy!"
     )
 
     visit_img = InputMediaPhoto(retrievePics(visit_place['photos'][0]['photo_reference']),caption=caption_msg,parse_mode='HTML')
@@ -285,7 +286,7 @@ def search(message):
         bot.send_message(chat_id=chat_id,text='Please run /start first!')
         return
 
-    search_msg = 'Which city do you wish to search in?'
+    search_msg = 'Which city do you wish to get suggestions for?'
     search_msg_sent = bot.send_message(chat_id=chat_id,text=search_msg)
     bot.register_next_step_handler(search_msg_sent,get_city)
 
@@ -302,7 +303,7 @@ def get_city(message):
         curr_card = cardClassSearch(city)
 
     if not curr_card.eatPlace and not curr_card.visitPlace:
-        invalid_msg = 'No places were found. You might have typed the city name wrongly.\nPlease try a valid city name, or wander within your own city >_<'
+        invalid_msg = 'No places were found. You might have typed the city name wrongly.\nPlease try a valid city name, or wander around your current location >_<'
         bot.send_message(chat_id,text=invalid_msg)
         post_itinerary(chat_id)
         return
