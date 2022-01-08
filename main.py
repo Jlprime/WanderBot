@@ -74,7 +74,7 @@ def handle_callback(call):
     
     if action == 'setloc':
         bot.answer_callback_query(call.id)
-        set_user_location(call.message)
+        set_user_location(call.message,'config')
         return
     
     if action == 'setrad':
@@ -94,7 +94,17 @@ def config(message):
         bot.send_message(chat_id=chat_id,text='Please run /start first!')
         return
     
-    button_text = 'Settings'
+    if user_location.get('latitude') == None:
+        curr_loc = 'Unknown'
+    else:
+        curr_loc = f"{user_location['longitude']}, {user_location['latitude']}"
+
+    if user_location.get('radius') == None:
+        curr_rad = 'Unknown'
+    else:
+        curr_rad = user_location['radius'] / 1000
+
+    button_text = f"Settings\nYour current settings:\nLocation - {curr_loc}\nSearch Radius - {curr_rad} km"
     buttons = []
     buttons.append(InlineKeyboardButton('Set Your Location',callback_data='setloc'))
     buttons.append(InlineKeyboardButton('Change Search Radius',callback_data='setrad'))
@@ -129,38 +139,49 @@ def detect_radius(message):
         success_msg = 'Radius successfully set.'
         bot.send_message(chat_id=chat_id,text=success_msg)
         start(message)
-    except ValueError:
+    except (ValueError, TypeError):
         error_msg = 'The value you entered was not a number. Please try again.'
         error_msg_sent = bot.send_message(chat_id=chat_id,text=error_msg)
         bot.register_next_step_handler(error_msg_sent, detect_radius)
     
     return
 
-def set_user_location(message):
+def set_user_location(message,caller):
     chat_id = message.chat.id
     if not ('chat_name' in user_info):
         bot.send_message(chat_id=chat_id,text='Please run /start first!')
         return
 
-    keyboard = ReplyKeyboardMarkup(
+    loc_button = KeyboardButton(
+        text='Tap me to share!',
+        request_location=True)
+    cancel_button = KeyboardButton(
+        text='I do not wish to share.'
+    )
+    reply_markup = ReplyKeyboardMarkup(
         row_width=1,
         resize_keyboard=True,
         one_time_keyboard=True)
-    loc_button = KeyboardButton(
-        text='Tap me!',
-        request_location=True)
-    keyboard.add(loc_button)
-
+    reply_markup.add(loc_button,cancel_button)
+    
     loc_msg = 'Please share with us your location!'
-    loc_msg_sent = bot.send_message(chat_id=chat_id,text=loc_msg,reply_markup=keyboard)
-    bot.register_next_step_handler(loc_msg_sent,detect_location)
+    loc_msg_sent = bot.send_message(chat_id=chat_id,text=loc_msg,reply_markup=reply_markup)
+    bot.register_next_step_handler(loc_msg_sent,detect_location, caller)
 
     return 
 
-def detect_location(message):
-    first_call = not user_location
-
+def detect_location(message,caller):
     chat_id = message.chat.id
+
+    if message.text == 'I do not wish to share.':
+        bot.send_message(chat_id=chat_id,text='Understood.')
+        return
+
+    if lambda message: message.document.mime_type != 'location':
+        error_msg = 'That was not a location. Please try again.'
+        bot.send_message(chat_id=chat_id,text=error_msg)
+        set_user_location(message,caller)
+        return
 
     latitude = message.location.latitude
     longitude = message.location.longitude
@@ -171,20 +192,22 @@ def detect_location(message):
     # location_text = f'Your location is {latitude}, {longitude}.'
     # bot.send_message(chat_id=chat_id,text=location_text)
 
-    if first_call:
-        user_location.setdefault('radius',5000)
-        # first_call_msg = 'Please hold while we provide you with your itinerary...'
-        # bot.send_message(chat_id=chat_id,text=first_call_msg)
+    if caller == 'wander':
         wander(message)
-
+        return
+    if caller == 'config':
+        bot.send_message(chat_id=chat_id,text='Done!')
+        return
+    
     return
 
 @bot.message_handler(commands=['wander'])
 def wander(message):
-    if not user_location:
-        set_user_location(message)
+    if not user_location.get('latitude') or not user_location.get('longitude'):
+        set_user_location(message,'wander')
         return
     
+    user_location.setdefault('radius',5000)
     chat_id = message.chat.id
     bot.send_chat_action(chat_id=chat_id,action='typing')
     if not ('chat_name' in user_info):
@@ -264,9 +287,15 @@ def search(message):
 
 def get_city(message):
     chat_id = message.chat.id
+    bot.send_chat_action(chat_id=chat_id,action='typing')
     chat_user = user_info['chat_name']
     city = str(message.text).lower()
-    curr_card = cardClassSearch(city)
+    if lambda message: message.document.mime_type != 'text/plain':
+        unknownerr_msg = 'There was an error due to an invalid message. Please try again.'
+        bot.send_message(chat_id,text=unknownerr_msg)
+        return
+    else:
+        curr_card = cardClassSearch(city)
 
     if not curr_card.eatPlace and not curr_card.visitPlace:
         invalid_msg = 'No places were found. You might have typed the city name wrongly.\nPlease try a valid city name, or wander within your own city >_<'
