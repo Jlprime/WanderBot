@@ -205,15 +205,15 @@ def itinerary(chat_id,chat_user,city,curr_card):
     eat_place = curr_card.eatPlace
     visit_place = curr_card.visitPlace
     visit_place2 = curr_card.visitPlace2
-    placelist = [eat_place, visit_place]
+    placelist = [visit_place, eat_place, visit_place2]
     placename = ['dining','a place to visit','another place to visit']
     
     caption_msg = (
         f"Hello {chat_user},\nHere\'s your itinerary for a day in <b>{city}</b>.\n\n"
-        f"<b>{city}</b> is currently experiencing <b>{weather}</b> with a temperature of <b>{temp:.1f} deg C</b>.\n\n"
-        f"First, you can visit {visit_place['name']} ({visit_place['rating']}☆ / 5☆)"
-        f"Then, you may grab some delicacies at {eat_place['name']} ({eat_place['rating']}☆ / 5☆)\n\n"
-        f"After which, you can visit {visit_place2['name']} (Rating {visit_place2['rating']}☆ / 5☆)"
+        f"<b>{city}</b> is currently experiencing <b>{weather}</b> with a temperature of <b>{temp:.1f}°C</b>.\n\n"
+        f"First, you can visit {visit_place['name']}. ({visit_place['rating']}☆ / 5☆)\n\n"
+        f"Then, you may grab some delicacies at {eat_place['name']}. ({eat_place['rating']}☆ / 5☆)\n\n"
+        f"After which, you can visit {visit_place2['name']}. ({visit_place2['rating']}☆ / 5☆)"
     )
 
     visit_img = InputMediaPhoto(retrievePics(visit_place['photos'][0]['photo_reference']),caption=caption_msg,parse_mode='HTML')
