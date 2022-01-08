@@ -10,7 +10,7 @@ from retrievepics import retrievePics
 
 TOKEN = config.TELE_API_KEY
 
-bot = telebot.TeleBot(token=TOKEN)
+bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)
 
 user_info = dict()
