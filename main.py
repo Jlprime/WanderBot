@@ -257,7 +257,7 @@ def itinerary(chat_id,chat_user,city,curr_card):
     bot.send_media_group(chat_id=chat_id,media=imgs)
 
     for idx, place in enumerate(placelist):
-        if place:
+        if place != {}:
             bot.send_venue(
             chat_id=chat_id,
             latitude=place['geometry']['location']['lat'],
@@ -301,7 +301,7 @@ def get_city(message):
         city = str(message.text).title()
         curr_card = cardClassSearch(city)
 
-    if curr_card.eatPlace == None and curr_card.visitPlace == None and curr_card.visitPlace2 == None:
+    if curr_card.eatPlace == {} and curr_card.visitPlace == {} and curr_card.visitPlace2 == {}:
         invalid_msg = 'No places were found. You might have typed the city name wrongly.\nPlease try a valid city name, or wander around your current location >_<'
         bot.send_message(chat_id,text=invalid_msg)
         post_itinerary(chat_id)
