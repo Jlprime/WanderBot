@@ -219,7 +219,7 @@ def wander(message):
     lat = user_location['latitude']
     long = user_location['longitude']
     rad = user_location['radius']
-    chat_user = user_info['chat_name']
+    chat_user = message.chat.first_name
 
     city = reverse_geocoder(str(lat),str(long))
     curr_card = cardClass(lat,long,rad)
