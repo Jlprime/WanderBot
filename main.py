@@ -34,21 +34,21 @@ def start(message):
         chat_user = message.chat.first_name
         if not user_info:
             user_info['chat_name'] = chat_user
-            welcome_msg = (
-                f'Hello {chat_user}, welcome to WanderBot!\n\n'
-                '/start - Your first command (to initialise the bot).\n'
-                '/wander - Find places to go in your city.\n'
-                '/search - Find places to go in another city.\n'
-                '/config - Bot settings.\n\n'
-                'What would you like to do?'
-            )
-            
-            buttons = []
-            buttons.append(InlineKeyboardButton('Wander',callback_data='wander'))
-            buttons.append(InlineKeyboardButton('Search by City',callback_data='search'))
-            reply_markup = InlineKeyboardMarkup([buttons])
+        welcome_msg = (
+            f'Hello {chat_user}, welcome to WanderBot!\n\n'
+            '/start - Your first command (to initialise the bot).\n'
+            '/wander - Find places to go in your city.\n'
+            '/search - Find places to go in another city.\n'
+            '/config - Bot settings.\n\n'
+            'What would you like to do?'
+        )
+        
+        buttons = []
+        buttons.append(InlineKeyboardButton('Wander',callback_data='wander'))
+        buttons.append(InlineKeyboardButton('Search by City',callback_data='search'))
+        reply_markup = InlineKeyboardMarkup([buttons])
 
-            bot.send_message(chat_id=chat_id,text=welcome_msg,reply_markup=reply_markup)
+        bot.send_message(chat_id=chat_id,text=welcome_msg,reply_markup=reply_markup)
     else:
         bot.send_message(chat_id=chat_id,text='Please use this bot in a private chat!')
         return
