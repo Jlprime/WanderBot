@@ -8,7 +8,7 @@ from cardclasssearch import cardClassSearch
 from reversegeo import reverse_geocoder
 from retrievepics import retrievePics
 
-TOKEN = os.getenv('TOKEN')
+TOKEN = config.TELE_API_KEY
 
 bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)
