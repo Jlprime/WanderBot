@@ -3,7 +3,6 @@ For Hack &amp; Roll 2022
 
 
 ## Inspiration
-
 As avid travelers and people who generally enjoy finding new places in Singapore, we thought that we could make a simple *something* that will help those who wish to be spontaneous in a new and unfamiliar city, without being too imposing or complicated to use. That's why we chose Telegram, which is fast becoming a dominant messaging app in general.
 ---
 ## What it does
