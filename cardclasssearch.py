@@ -18,7 +18,6 @@ def weather(city):
     url = "http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric" % (city, os.getenv('WEATHER_TOKEN') )
     response = requests.get(url)
     data = json.loads(response.text)
-    # print (data)
     if data['cod'] == 200:
         return [data['weather'][0]['description'].title(),data['main']['temp']]
     else:

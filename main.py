@@ -293,7 +293,7 @@ def get_city(message):
     chat_id = message.chat.id
     bot.send_chat_action(chat_id=chat_id,action='typing')
     chat_user = user_info['chat_name']
-    if message.text == None:
+    if message.text == None or message.text.isalpha() == False:
         unknownerr_msg = 'There was an error due to an invalid message. Please try the command again.'
         bot.send_message(chat_id,text=unknownerr_msg)
         return
@@ -301,7 +301,7 @@ def get_city(message):
         city = str(message.text).title()
         curr_card = cardClassSearch(city)
 
-    if curr_card.weather == []:
+    if curr_card.weather == [] :
         invalid_msg = 'No places were found. You might have typed the city name wrongly.\nPlease try a valid city name, or wander around your current location >_<'
         bot.send_message(chat_id,text=invalid_msg)
         post_itinerary(chat_id)
