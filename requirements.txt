@@ -3,4 +3,3 @@ gtts
 praw
 geopy
 flask
-os
