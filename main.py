@@ -301,7 +301,7 @@ def get_city(message):
         city = str(message.text).title()
         curr_card = cardClassSearch(city)
 
-    if curr_card.eatPlace == {} and curr_card.visitPlace == {} and curr_card.visitPlace2 == {}:
+    if curr_card.weather == []:
         invalid_msg = 'No places were found. You might have typed the city name wrongly.\nPlease try a valid city name, or wander around your current location >_<'
         bot.send_message(chat_id,text=invalid_msg)
         post_itinerary(chat_id)
