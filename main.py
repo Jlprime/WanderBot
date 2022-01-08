@@ -1,3 +1,4 @@
+import os
 import telebot
 import config
 from telebot.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, KeyboardButton, ReplyKeyboardMarkup
@@ -6,8 +7,10 @@ from cardclasssearch import cardClassSearch
 from reversegeo import reverse_geocoder
 from retrievepics import retrievePics
 
+#PORT = int(os.environ.get('PORT', 5000))
+TOKEN = config.TELE_API_KEY
 
-bot = telebot.TeleBot(config.TELE_API_KEY)
+bot = telebot.TeleBot(TOKEN)
 
 user_info = dict()
 user_location = dict()

@@ -35,7 +35,6 @@ def place(lat, long, rad, which, popped=None):
                 "movie_theater",
                 "museum",
                 "night_club",
-                "painter",
                 "park",
                 "shopping_mall",
                 "spa",
