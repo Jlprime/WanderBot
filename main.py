@@ -7,7 +7,7 @@ from cardclasssearch import cardClassSearch
 from reversegeo import reverse_geocoder
 from retrievepics import retrievePics
 
-PORT = int(os.environ.get('PORT', 5000))
+#PORT = int(os.environ.get('PORT', 5000))
 TOKEN = config.TELE_API_KEY
 
 bot = telebot.TeleBot(TOKEN)
