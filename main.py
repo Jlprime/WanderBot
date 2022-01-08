@@ -167,7 +167,7 @@ def set_user_location(message,caller):
         one_time_keyboard=True)
     reply_markup.add(loc_button,cancel_button)
 
-    loc_msg = 'Please share with us your location!'
+    loc_msg = 'Please share with us your location - if you want to, of course!'
     loc_msg_sent = bot.send_message(chat_id=chat_id,text=loc_msg,reply_markup=reply_markup)
     bot.register_next_step_handler(loc_msg_sent,detect_location, caller)
 
