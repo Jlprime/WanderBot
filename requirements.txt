@@ -2,3 +2,5 @@ pytelegrambotapi
 gtts
 praw
 geopy
+flask
+os

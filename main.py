@@ -1,4 +1,5 @@
 import os
+from flask import Flask, request
 import telebot
 import config
 from telebot.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, KeyboardButton, ReplyKeyboardMarkup
@@ -7,10 +8,10 @@ from cardclasssearch import cardClassSearch
 from reversegeo import reverse_geocoder
 from retrievepics import retrievePics
 
-#PORT = int(os.environ.get('PORT', 5000))
 TOKEN = config.TELE_API_KEY
 
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot(token=TOKEN)
+server = Flask(__name__)
 
 user_info = dict()
 user_location = dict()
@@ -308,4 +309,16 @@ def get_city(message):
     itinerary(chat_id,chat_user,city,curr_card)
     post_itinerary(chat_id)
 
-bot.infinity_polling()
+@server.route('/'+TOKEN,methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "!", 200
+
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url='https://wander-bot.herokuapp.com/'+TOKEN)
+    return "!", 200
+
+if __name__ == "__main__":
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
