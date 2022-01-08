@@ -163,7 +163,7 @@ def set_user_location(message,caller):
         resize_keyboard=True,
         one_time_keyboard=True)
     reply_markup.add(loc_button,cancel_button)
-    
+
     loc_msg = 'Please share with us your location!'
     loc_msg_sent = bot.send_message(chat_id=chat_id,text=loc_msg,reply_markup=reply_markup)
     bot.register_next_step_handler(loc_msg_sent,detect_location, caller)
@@ -177,7 +177,7 @@ def detect_location(message,caller):
         bot.send_message(chat_id=chat_id,text='Understood.')
         return
 
-    if lambda message: message.document.mime_type != 'location':
+    if message.location == None:
         error_msg = 'That was not a location. Please try again.'
         bot.send_message(chat_id=chat_id,text=error_msg)
         set_user_location(message,caller)
