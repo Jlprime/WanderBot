@@ -19,7 +19,7 @@ def weather(city):
     response = requests.get(url)
     data = json.loads(response.text)
     # print (data)
-    if data:
+    if data['cod'] == 200:
         return [data['weather'][0]['description'].title(),data['main']['temp']]
     else:
         return []

@@ -105,6 +105,10 @@ def config(message):
 
 def set_user_radius(message):
     chat_id = message.chat.id
+    if not ('chat_name' in user_info):
+        bot.send_message(chat_id=chat_id,text='Please run /start first!')
+        return
+
     rad_msg = 'Please enter a radius you would like the search to be within (in km, between 5 - 50).'
     rad_msg_sent = bot.send_message(chat_id=chat_id,text=rad_msg)
     bot.register_next_step_handler(rad_msg_sent, detect_radius)
@@ -115,7 +119,7 @@ def detect_radius(message):
     chat_id = message.chat.id
     rad = message.text
     try:
-        rad = int(rad)
+        rad = round(float(rad))
         if rad < 5 or rad > 50:
             bound_msg = 'The radius is out of bounds! Please type a number between 5 - 50.'
             bound_msg_sent = bot.send_message(chat_id=chat_id,text=bound_msg)
@@ -134,6 +138,9 @@ def detect_radius(message):
 
 def set_user_location(message):
     chat_id = message.chat.id
+    if not ('chat_name' in user_info):
+        bot.send_message(chat_id=chat_id,text='Please run /start first!')
+        return
 
     keyboard = ReplyKeyboardMarkup(
         row_width=1,
@@ -168,7 +175,6 @@ def detect_location(message):
         user_location.setdefault('radius',5000)
         # first_call_msg = 'Please hold while we provide you with your itinerary...'
         # bot.send_message(chat_id=chat_id,text=first_call_msg)
-        bot.send_chat_action(chat_id=chat_id,action='typing')
         wander(message)
 
     return
@@ -178,9 +184,9 @@ def wander(message):
     if not user_location:
         set_user_location(message)
         return
-
+    
     chat_id = message.chat.id
-
+    bot.send_chat_action(chat_id=chat_id,action='typing')
     if not ('chat_name' in user_info):
         bot.send_message(chat_id=chat_id,text='Please run /start first!')
         return
